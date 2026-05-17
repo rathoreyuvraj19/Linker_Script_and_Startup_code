@@ -1,0 +1,20 @@
+#-------Variables--------------
+CC = arm-none-eabi-gcc
+MACHINE = cortex-m4
+OBJCOPY = arm-none-eiab-objcopy
+TARGET = firmware
+SOURCES = main.c led.c
+OBJECTS = $(SOURCES:.c=.o)
+CFLAGS = -mcpu=$(MACHINE) -mthumb -O0 -Wall
+CFLAGS_DEBUG = $(CFLAGS) -g
+
+#---------DEFAULT target ----------------
+all:
+	$(TARGET).bin
+
+all:
+	echo $(OBJECTS)
+
+main.o: main.c
+	$(CC) $(CFLAGS_DEBUG) -c $< -o $@
+
