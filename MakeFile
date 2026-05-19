@@ -1,7 +1,7 @@
 #-------Variables--------------
 CC = arm-none-eabi-gcc
 MACHINE = cortex-m4
-OBJCOPY = arm-none-eiab-objcopy
+OBJCOPY = arm-none-eabi-objcopy
 TARGET = firmware
 SOURCES = main.c led.c
 OBJECTS = $(SOURCES:.c=.o)
@@ -9,12 +9,17 @@ CFLAGS = -mcpu=$(MACHINE) -mthumb -O0 -Wall
 CFLAGS_DEBUG = $(CFLAGS) -g
 
 #---------DEFAULT target ----------------
-all:
-	$(TARGET).bin
-
-all:
-	echo $(OBJECTS)
+all: main.o led.o stm32_startup.o
 
 main.o: main.c
-	$(CC) $(CFLAGS_DEBUG) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
+led.o: led.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+stm32_startup.o: stm32_startup.c
+	$(CC) $(CFLAGS) -c $< -o $@	
+	
+clean: 
+	rm -rf *.o *.elf
+	
