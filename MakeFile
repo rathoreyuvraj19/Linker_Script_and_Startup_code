@@ -7,9 +7,12 @@ SOURCES = main.c led.c
 OBJECTS = $(SOURCES:.c=.o)
 CFLAGS = -mcpu=$(MACHINE) -mthumb -O0 -Wall
 CFLAGS_DEBUG = $(CFLAGS) -g
+LDFLAGS =  -nostdlib -T stm32_linker_script.ld -Wl,-Map=firmware.map
 
 #---------DEFAULT target ----------------
-all: main.o led.o stm32_startup.o
+.PHONY: all clean
+
+all: clean firmware.elf
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -19,7 +22,10 @@ led.o: led.c
 	
 stm32_startup.o: stm32_startup.c
 	$(CC) $(CFLAGS) -c $< -o $@	
+
+firmware.elf: main.o led.o stm32_startup.o
+	$(CC) $(LDFLAGS) $^ -o $@
 	
 clean: 
 	rm -rf *.o *.elf
-	
+
